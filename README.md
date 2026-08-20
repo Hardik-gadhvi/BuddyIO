@@ -21,11 +21,25 @@ Check with `node -v`. If it prints 20.x, upgrade before continuing.
 
 ## Quick start
 
+**Web** (typed in-memory fixtures, no backend needed):
+
 ```bash
 cd "apps/web" && npm install && npm start
 ```
 
-Open <http://localhost:4200>. The app runs entirely on typed in-memory fixtures.
+**API** (needs Docker for PostgreSQL):
+
+```bash
+docker compose up -d postgres
+```
+
+```bash
+cd services && dotnet run --project src/BuddyIO.Api --launch-profile https
+```
+
+Web on <http://localhost:4200>, API on <https://localhost:7055>, API reference at
+<https://localhost:7055/scalar/v1>. See
+[docs/06-backend-foundation.md](docs/06-backend-foundation.md) for migrations and tests.
 
 Look for the **gear button, bottom-right** — the dev panel drives mock latency and failure,
 so every loading and error state is reachable without touching code.
@@ -53,6 +67,7 @@ four rules that keep the architecture honest.
 | [03 — Component inventory](docs/03-component-inventory.md) | Component API and state matrix |
 | [04 — User flows](docs/04-user-flows.md) | Happy paths and failure modes |
 | [05 — Accessibility & responsive](docs/05-accessibility-and-responsive.md) | Checklist and test matrix |
+| [06 — Backend foundation](docs/06-backend-foundation.md) | Modules, error contract, security decisions |
 | [ADRs](docs/adr/) | The decisions worth defending |
 
 ## Technology baseline
@@ -79,8 +94,8 @@ placeholders only.
 | Phase | State |
 |---|---|
 | 0 — Discovery, design system | Complete |
-| **1 — Frontend prototype** | **In progress** — shell, theme, routes and home feed done; auth, composer, profile, messaging pending |
-| 2 — Platform foundation | Not started |
+| 1 — Frontend prototype | Foundation complete — design system, primitives, forms, shell, feed and auth screens. Remaining screens build against real endpoints |
+| **2 — Platform foundation** | **In progress** — .NET 10 modular monolith, Identity module, PostgreSQL, versioned API, Problem Details, OpenTelemetry, enforced module boundaries |
 | 3 — Content and media | Not started |
 | 4 — Realtime messaging | Not started |
 | 5 — Safety and readiness | Not started |

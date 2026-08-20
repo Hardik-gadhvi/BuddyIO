@@ -1,0 +1,55 @@
+# Local development dependencies.
+#
+# This is NOT a simulation of Azure. It provides the same ENGINES the cloud
+# environments use (PostgreSQL, Redis) so that queries, migrations and indexes
+# behave identically, and nothing more. Managed identity, private endpoints and
+# Front Door have no local equivalent and are not pretended into existence here.
+services:
+  postgres:
+    image: postgres:18-alpine
+    container_name: buddyio-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: buddyio
+      POSTGRES_USER: buddyio
+      # Local-only credential. Real environments read from Key Vault via
+      # managed identity; nothing in this file is ever used outside a laptop.
+      POSTGRES_PASSWORD: buddyio_dev_only
+      POSTGRES_INITDB_ARGS: "--data-checksums"
+    ports:
+      # 5433 on the host, not 5432. A native PostgreSQL service already owns
+      # 5432 on this machine, and silently connecting to the wrong server is a
+      # genuinely confusing failure - it authenticates as the wrong user against
+      # a database that has none of our schemas. BuddyIO gets its own port.
+      - "5433:5432"
+    volumes:
+      # PG18+ wants ONE mount at /var/lib/postgresql, not at .../data. The image
+      # places its data in a versioned subdirectory so that `pg_upgrade --link`
+      # is possible later without crossing a mount boundary. Mounting the old
+      # path makes the container refuse to start.
+      - buddyio-postgres:/var/lib/postgresql
+    healthcheck:
+      # The API's readiness probe depends on this being genuinely accepting
+      # connections, not merely running.
+      test: ["CMD-SHELL", "pg_isready -U buddyio -d buddyio"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+  redis:
+    image: redis:8-alpine
+    container_name: buddyio-redis
+    restart: unless-stopped
+    # Phase 5 uses this for presence, typing indicators and rate-limit counters.
+    # All of that is ephemeral by design, so there is no volume: losing it must
+    # never lose durable state.
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+volumes:
+  buddyio-postgres:

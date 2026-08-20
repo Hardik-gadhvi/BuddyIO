@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <!-- A class library that maps minimal-API endpoints needs the ASP.NET Core
+         shared framework; without this, IEndpointRouteBuilder is unavailable. -->
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
+    <PackageReference Include="FluentValidation" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuddyIO.SharedKernel\BuddyIO.SharedKernel.csproj" />
+    <ProjectReference Include="..\BuddyIO.Modules.Identity.Contracts\BuddyIO.Modules.Identity.Contracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Module internals are `internal`; the module's own tests may see them. -->
+    <InternalsVisibleTo Include="BuddyIO.Modules.Identity.Tests" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/BuddyIO.Api/BuddyIO.Api.csproj" />
+    <Project Path="src/BuddyIO.SharedKernel/BuddyIO.SharedKernel.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/" />
+  <Folder Name="/src/Modules/Identity/">
+    <Project Path="src/Modules/Identity/BuddyIO.Modules.Identity.Contracts/BuddyIO.Modules.Identity.Contracts.csproj" />
+    <Project Path="src/Modules/Identity/BuddyIO.Modules.Identity/BuddyIO.Modules.Identity.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/BuddyIO.ArchitectureTests/BuddyIO.ArchitectureTests.csproj" />
+    <Project Path="tests/BuddyIO.Modules.Identity.Tests/BuddyIO.Modules.Identity.Tests.csproj" />
+  </Folder>
+</Solution>

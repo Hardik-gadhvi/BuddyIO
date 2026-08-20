@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Executable module-boundary rules (ADR-0001).
+
+    The whole justification for a modular monolith is that the boundaries are
+    real. A boundary that is only described in a document erodes within a few
+    sprints, so it is asserted here and the build fails when it is crossed.
+  -->
+
+  <PropertyGroup>
+    <!-- xunit v3 test projects run as executables. -->
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit.v3" />
+    <PackageReference Include="Shouldly" />
+    <PackageReference Include="NetArchTest.Rules" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\BuddyIO.Api\BuddyIO.Api.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Identity\BuddyIO.Modules.Identity\BuddyIO.Modules.Identity.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Identity\BuddyIO.Modules.Identity.Contracts\BuddyIO.Modules.Identity.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\BuddyIO.SharedKernel\BuddyIO.SharedKernel.csproj" />
+  </ItemGroup>
+
+</Project>

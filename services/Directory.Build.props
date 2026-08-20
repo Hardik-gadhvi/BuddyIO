@@ -1,0 +1,64 @@
+<Project>
+
+  <!--
+    Shared build settings for every BuddyIO project.
+
+    Two of these are load-bearing rather than cosmetic:
+
+    - TreatWarningsAsErrors: a warning nobody fixes is a warning nobody reads.
+      Suppress a specific rule with a documented reason instead.
+    - Nullable: enabled everywhere. Reference-type nullability is the single
+      cheapest defect class to eliminate in a C# codebase, and retrofitting it
+      later is miserable.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsNotAsErrors></WarningsNotAsErrors>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+
+    <!-- Deterministic, reproducible output. -->
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild Condition="'$(TF_BUILD)' == 'true'">true</ContinuousIntegrationBuild>
+
+    <!-- Fail the build if a package has a known vulnerability. -->
+    <NuGetAudit>true</NuGetAudit>
+    <NuGetAuditMode>all</NuGetAuditMode>
+    <NuGetAuditLevel>low</NuGetAuditLevel>
+
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+
+    <!-- Opt in to Microsoft.Testing.Platform for `dotnet test` (.NET 10). Set
+         solution-wide: the per-project condition is easy to get subtly wrong. -->
+    <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+
+  <!-- Test projects: never ship, and relax the doc/vuln strictness slightly. -->
+  <PropertyGroup Condition="$(MSBuildProjectName.EndsWith('Tests'))">
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <!--
+      xunit v3 runs on Microsoft.Testing.Platform, and the .NET 10 SDK requires
+      an explicit opt-in before `dotnet test` will drive it. Without this the
+      SDK falls back to VSTest, which it no longer supports for MTP projects.
+    -->
+    <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+    <UseVSTest>false</UseVSTest>
+
+    <!--
+      CA1707 bans underscores in member names. In test projects that rule is
+      counter-productive: `Treats_the_thirteenth_birthday_itself_as_eligible`
+      reads as a sentence in a failure report, which is exactly what a test name
+      is for. Suppressed here only, never in shipping code.
+    -->
+    <NoWarn>$(NoWarn);CA1707</NoWarn>
+  </PropertyGroup>
+
+</Project>

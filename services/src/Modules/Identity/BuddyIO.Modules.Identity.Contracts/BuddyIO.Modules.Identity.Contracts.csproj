@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    The ONLY part of the Identity module other modules may reference.
+    Interfaces and DTOs only - no EF Core, no entities, no implementation.
+    Enforced by BuddyIO.ArchitectureTests.
+  -->
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuddyIO.SharedKernel\BuddyIO.SharedKernel.csproj" />
+  </ItemGroup>
+
+</Project>

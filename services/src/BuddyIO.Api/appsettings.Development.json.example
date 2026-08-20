@@ -1,0 +1,25 @@
+{
+  "//": [
+    "Copy to appsettings.Development.json (git-ignored) to run locally.",
+    "",
+    "The credential below is local-only and matches docker-compose.yml, which is",
+    "itself committed - so this file leaks nothing. It is kept out of source",
+    "control anyway, because appsettings.Development.json is exactly the file",
+    "people later paste a REAL secret into. Real secrets belong in user-secrets:",
+    "  dotnet user-secrets set \"ConnectionStrings:Postgres\" \"...\"",
+    "",
+    "Port 5433, not 5432: see docker-compose.yml."
+  ],
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.EntityFrameworkCore.Database.Command": "Information"
+    }
+  },
+  "ConnectionStrings": {
+    "Postgres": "Host=localhost;Port=5433;Database=buddyio;Username=buddyio;Password=buddyio_dev_only"
+  },
+  "Cors": {
+    "AllowedOrigins": ["http://localhost:4200"]
+  }
+}

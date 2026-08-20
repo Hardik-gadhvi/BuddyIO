@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Primitives shared by every module: strongly-typed ids, the error contract,
+    the clock abstraction, and the outbox message shape.
+
+    Deliberately has NO package references. The shared kernel is referenced by
+    every module, so anything added here is added to everything - which makes it
+    the easiest place in the solution to accidentally create a global dependency.
+  -->
+
+</Project>
