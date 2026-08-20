@@ -1,0 +1,95 @@
+// =============================================================================
+// BuddyIO - A deliberately small utility layer.
+// This is NOT a utility-first framework. Anything used more than three times
+// becomes a component instead.
+// =============================================================================
+
+@use 'mixins' as *;
+
+.bio-visually-hidden {
+  @include visually-hidden;
+}
+
+// Visible only to keyboard users when focused (e.g. "Load more" for SR users).
+.bio-visually-hidden-focusable:not(:focus):not(:focus-within) {
+  @include visually-hidden;
+}
+
+.bio-truncate {
+  @include truncate;
+}
+
+.bio-wrap-anywhere {
+  @include wrap-anywhere;
+}
+
+.bio-clamp-2 {
+  @include line-clamp(2);
+}
+
+.bio-clamp-3 {
+  @include line-clamp(3);
+}
+
+// The page container: centred, gutter-aware, never wider than the page max.
+.bio-container {
+  width: 100%;
+  max-width: var(--bio-layout-page-max);
+  margin-inline: auto;
+  padding-inline: var(--bio-layout-gutter);
+
+  @include bp(md) {
+    padding-inline: var(--bio-layout-gutter-md);
+  }
+}
+
+// Vertical rhythm without margin collapsing surprises.
+.bio-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bio-space-4);
+}
+
+.bio-stack-sm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bio-space-2);
+}
+
+.bio-row {
+  display: flex;
+  align-items: center;
+  gap: var(--bio-space-2);
+  min-width: 0;
+}
+
+.bio-spacer {
+  flex: 1 1 auto;
+}
+
+// Aspect-locked media box. The reason CLS is structurally impossible here.
+.bio-aspect {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: var(--bio-surface-sunken);
+}
+
+.bio-aspect > img,
+.bio-aspect > video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.bio-aspect-square {
+  aspect-ratio: 1 / 1;
+}
+
+.bio-aspect-portrait {
+  aspect-ratio: 4 / 5;
+}
+
+.bio-aspect-landscape {
+  aspect-ratio: 16 / 9;
+}

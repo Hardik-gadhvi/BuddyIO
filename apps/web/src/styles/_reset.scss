@@ -1,0 +1,124 @@
+// =============================================================================
+// BuddyIO - Reset. Opinionated, minimal, accessibility-preserving.
+// Nothing here removes a focus indicator or an accessible default.
+// =============================================================================
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  // Never disable user scaling (WCAG 1.4.4).
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  // Smooth scroll only for users who want motion.
+  scroll-behavior: auto;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html:focus-within {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  min-height: 100dvh;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+// Media defaults: block-level, never wider than the container, never a CLS source.
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+img,
+video {
+  height: auto;
+}
+
+// Form controls inherit type instead of imposing a browser default.
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+}
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+textarea {
+  resize: vertical;
+}
+
+// Headings and long words must never push the page sideways.
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  overflow-wrap: break-word;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+ul[role='list'],
+ol[role='list'] {
+  list-style: none;
+  padding: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+// Keep an accessible table default.
+table {
+  border-collapse: collapse;
+}
+
+// Hidden must stay hidden even when a display utility is applied.
+[hidden] {
+  display: none !important;
+}
+
+// Respect the platform "reduce motion" setting as a global backstop.
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

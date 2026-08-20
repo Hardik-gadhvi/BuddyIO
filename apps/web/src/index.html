@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>BuddyIO</title>
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta
+      name="description"
+      content="BuddyIO - a social feed that feels like a group of friends, not a stadium."
+    />
+
+    <!-- Updated by ThemeService so mobile browser chrome matches the page. -->
+    <meta name="theme-color" content="#f6f5f3" />
+
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+
+    <!--
+      Inter, from Google Fonts (assumption A-09 in docs/00).
+      MUST be self-hosted before UAT: hotlinking a font is a third-party
+      request on every page load and a GDPR question we do not need to answer.
+      `display=swap` means a slow font never blocks first paint, and the
+      fallback stack in _tokens.scss is metric-close enough that the swap is
+      not a layout event.
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&display=swap"
+      rel="stylesheet"
+    />
+
+    <script>
+      /*
+       * Theme bootstrap. Runs before first paint.
+       *
+       * Without this, a user who chose Dark gets a flash of the light theme on
+       * every load: Angular has not booted yet, so nothing has set data-theme.
+       * Deliberately tiny, deliberately synchronous, and deliberately duplicated
+       * from ThemeService - it is the one place where correctness beats DRY.
+       *
+       * Note for Phase 4: this inline script needs a CSP nonce or hash once a
+       * strict Content-Security-Policy is in place.
+       */
+      (function () {
+        try {
+          var stored = localStorage.getItem('buddyio.theme');
+          if (stored === 'light' || stored === 'dark') {
+            document.documentElement.setAttribute('data-theme', stored);
+          }
+        } catch (e) {
+          /* Blocked storage must never break the page. */
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <bio-root></bio-root>
+  </body>
+</html>

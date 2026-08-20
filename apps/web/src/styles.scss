@@ -1,0 +1,19 @@
+// =============================================================================
+// BuddyIO - global stylesheet entry point.
+//
+// Order matters:
+//   tokens  -> defines every custom property (must be first)
+//   reset   -> normalises the platform
+//   base    -> element defaults that consume tokens
+//   type    -> type scale classes
+//   utils   -> the small utility layer
+//
+// `mixins` is imported by the files that need it and emits nothing itself.
+// =============================================================================
+
+@use './styles/tokens';
+@use './styles/reset';
+@use './styles/base';
+@use './styles/typography';
+@use './styles/components';
+@use './styles/utilities';

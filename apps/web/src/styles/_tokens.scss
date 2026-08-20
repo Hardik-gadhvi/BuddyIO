@@ -1,0 +1,393 @@
+// =============================================================================
+// BuddyIO - Design tokens. THE source of truth for every visual value.
+//
+// Three tiers (docs/02-design-system.md):
+//   1. PRIMITIVE  --bio-indigo-600      raw scale, theme-independent
+//   2. SEMANTIC   --bio-text-muted      named by ROLE - the only tier components use
+//   3. COMPONENT  --bio-postcard-*      rare, opt-in knobs
+//
+// A colour literal anywhere outside this file is a code-review failure.
+// =============================================================================
+
+:root {
+  // ===========================================================================
+  // TIER 1 - PRIMITIVES
+  // ===========================================================================
+
+  // -- Indigo (primary): trust and focus, without corporate coldness ----------
+  --bio-indigo-50: #eef0fb;
+  --bio-indigo-100: #dce0f7;
+  --bio-indigo-200: #b9c1ef;
+  --bio-indigo-300: #8f9ce4;
+  --bio-indigo-400: #6675d6;
+  --bio-indigo-500: #4753c4;
+  --bio-indigo-600: #3a43a8;
+  --bio-indigo-700: #2f3689;
+  --bio-indigo-800: #262c6d;
+  --bio-indigo-900: #1e2255;
+  --bio-indigo-950: #14163a;
+
+  // -- Coral (accent): spend it sparingly or it stops meaning anything --------
+  --bio-coral-50: #fff1ed;
+  --bio-coral-100: #ffe0d6;
+  --bio-coral-200: #ffc1ad;
+  --bio-coral-300: #ff9b7d;
+  --bio-coral-400: #fb7551;
+  --bio-coral-500: #ed5732; // graphical / large text only - 3.5:1 on white
+  --bio-coral-600: #d0431f; // the safe filled variant - 4.7:1 with white text
+  --bio-coral-700: #ac3418;
+  --bio-coral-800: #8a2c15;
+  --bio-coral-900: #712715;
+
+  // -- Neutral (warm stone): every surface, border and text colour ------------
+  --bio-neutral-0: #ffffff;
+  --bio-neutral-25: #fbfaf9;
+  --bio-neutral-50: #f6f5f3;
+  --bio-neutral-100: #eeedea;
+  --bio-neutral-200: #e2e0dc;
+  --bio-neutral-300: #cbc8c2;
+  --bio-neutral-400: #a6a29a;
+  --bio-neutral-500: #807c74;
+  --bio-neutral-600: #63605a;
+  --bio-neutral-700: #4a4843;
+  --bio-neutral-800: #33322e;
+  --bio-neutral-900: #22211f;
+  --bio-neutral-950: #171615;
+
+  // -- Ink (cool near-black): dark-mode surfaces only -------------------------
+  // Warm greys read as muddy brown on OLED; cool greys let coral sit forward.
+  --bio-ink-950: #0c0c10;
+  --bio-ink-900: #101014;
+  --bio-ink-850: #17171c;
+  --bio-ink-800: #1e1e24;
+  --bio-ink-700: #26262e;
+  --bio-ink-600: #33333d;
+  --bio-ink-500: #45454f;
+
+  // -- Semantic state hues ----------------------------------------------------
+  --bio-green-600: #0e7c58;
+  --bio-green-300: #5fd6a4;
+  --bio-green-50: #e7f6f0;
+  --bio-amber-600: #b45309;
+  --bio-amber-300: #fbbf4e;
+  --bio-amber-50: #fef4e2;
+  --bio-red-600: #c62a2a;
+  --bio-red-300: #f98b8b;
+  --bio-red-50: #fdecec;
+  --bio-blue-600: #0f6fb8;
+  --bio-blue-300: #7cc3f5;
+  --bio-blue-50: #e8f2fb;
+
+  // ===========================================================================
+  // SPACING - 4px base
+  // ===========================================================================
+  --bio-space-0: 0;
+  --bio-space-1: 0.25rem; //   4
+  --bio-space-2: 0.5rem; //    8
+  --bio-space-3: 0.75rem; //  12
+  --bio-space-4: 1rem; //      16
+  --bio-space-5: 1.25rem; //  20
+  --bio-space-6: 1.5rem; //   24
+  --bio-space-8: 2rem; //      32
+  --bio-space-10: 2.5rem; //  40
+  --bio-space-12: 3rem; //    48
+  --bio-space-16: 4rem; //    64
+  --bio-space-20: 5rem; //    80
+  --bio-space-24: 6rem; //    96
+
+  // ===========================================================================
+  // RADII
+  // ===========================================================================
+  --bio-radius-xs: 4px;
+  --bio-radius-sm: 6px;
+  --bio-radius-md: 10px;
+  --bio-radius-lg: 14px;
+  --bio-radius-xl: 20px;
+  --bio-radius-2xl: 28px;
+  --bio-radius-pill: 999px;
+  --bio-radius-circle: 50%;
+
+  // ===========================================================================
+  // TYPOGRAPHY
+  // ===========================================================================
+  // Inter is loaded from Google Fonts in dev (assumption A-09) and MUST be
+  // self-hosted before UAT. The fallback stack is chosen so that if Inter never
+  // arrives, metrics barely shift.
+  --bio-font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI Variable Text', 'Segoe UI',
+    Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --bio-font-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
+
+  --bio-weight-regular: 400;
+  --bio-weight-medium: 500;
+  --bio-weight-semibold: 600;
+  --bio-weight-bold: 700;
+
+  // size / line-height, in rem so browser text-zoom works
+  --bio-font-size-display: 2.5rem;
+  --bio-line-height-display: 2.75rem;
+  --bio-font-size-h1: 2rem;
+  --bio-line-height-h1: 2.375rem;
+  --bio-font-size-h2: 1.625rem;
+  --bio-line-height-h2: 2rem;
+  --bio-font-size-h3: 1.3125rem;
+  --bio-line-height-h3: 1.75rem;
+  --bio-font-size-h4: 1.125rem;
+  --bio-line-height-h4: 1.625rem;
+  --bio-font-size-body-lg: 1.0625rem;
+  --bio-line-height-body-lg: 1.625rem;
+  --bio-font-size-body: 1rem; // 16px floor - never smaller for primary reading
+  --bio-line-height-body: 1.5rem;
+  --bio-font-size-body-sm: 0.875rem;
+  --bio-line-height-body-sm: 1.25rem;
+  --bio-font-size-caption: 0.8125rem;
+  --bio-line-height-caption: 1.125rem;
+  --bio-font-size-overline: 0.75rem;
+  --bio-line-height-overline: 1rem;
+
+  --bio-tracking-tight: -0.02em;
+  --bio-tracking-snug: -0.01em;
+  --bio-tracking-normal: 0;
+  --bio-tracking-wide: 0.08em;
+
+  --bio-measure: 68ch; // maximum comfortable line length
+
+  // ===========================================================================
+  // MOTION
+  // ===========================================================================
+  --bio-duration-fast: 120ms;
+  --bio-duration-base: 180ms;
+  --bio-duration-slow: 240ms;
+  --bio-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --bio-ease-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --bio-ease-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15);
+  --bio-ease-spring: cubic-bezier(0.2, 1.3, 0.4, 1);
+
+  // ===========================================================================
+  // Z-INDEX - a closed ordinal list. Any other z-index is a review failure.
+  // ===========================================================================
+  --bio-z-base: 0;
+  --bio-z-raised: 10;
+  --bio-z-sticky: 100;
+  --bio-z-nav: 200;
+  --bio-z-drawer: 300;
+  --bio-z-overlay: 400;
+  --bio-z-dialog: 500;
+  --bio-z-popover: 600;
+  --bio-z-toast: 700;
+  --bio-z-tooltip: 800;
+  --bio-z-skip-link: 900;
+
+  // ===========================================================================
+  // LAYOUT
+  // ===========================================================================
+  --bio-layout-sidebar: 240px;
+  --bio-layout-rail: 88px;
+  --bio-layout-topbar-h: 56px;
+  --bio-layout-topbar-h-md: 64px;
+  --bio-layout-bottomnav-h: 56px;
+  --bio-layout-feed-w: 600px; // the feed column never grows past this
+  --bio-layout-rightrail-w: 320px;
+  --bio-layout-page-max: 1280px;
+  --bio-layout-gutter: var(--bio-space-4);
+  --bio-layout-gutter-md: var(--bio-space-6);
+
+  // ===========================================================================
+  // TIER 2 - SEMANTIC (LIGHT). Components consume ONLY these.
+  // ===========================================================================
+
+  // -- Surfaces --
+  --bio-surface-canvas: var(--bio-neutral-50);
+  --bio-surface-default: var(--bio-neutral-0);
+  --bio-surface-raised: var(--bio-neutral-0);
+  --bio-surface-sunken: var(--bio-neutral-100);
+  --bio-surface-inverse: var(--bio-neutral-900);
+  --bio-surface-overlay: rgb(23 22 21 / 45%);
+  --bio-surface-tint: var(--bio-indigo-50);
+  --bio-surface-skeleton: var(--bio-neutral-200);
+  --bio-surface-skeleton-shine: var(--bio-neutral-100);
+
+  // -- Text --
+  --bio-text-primary: var(--bio-neutral-900);
+  --bio-text-secondary: var(--bio-neutral-700);
+  --bio-text-muted: var(--bio-neutral-600);
+  --bio-text-disabled: var(--bio-neutral-400);
+  --bio-text-inverse: var(--bio-neutral-0);
+  --bio-text-link: var(--bio-indigo-600);
+  --bio-text-accent: var(--bio-coral-600);
+  --bio-text-on-accent: var(--bio-neutral-0);
+
+  // -- Borders --
+  --bio-border-subtle: var(--bio-neutral-200);
+  --bio-border-default: var(--bio-neutral-300);
+  --bio-border-strong: var(--bio-neutral-400);
+  --bio-border-inverse: var(--bio-ink-600);
+
+  // -- Actions --
+  --bio-action-primary-bg: var(--bio-indigo-600);
+  --bio-action-primary-bg-hover: var(--bio-indigo-700);
+  --bio-action-primary-bg-active: var(--bio-indigo-800);
+  --bio-action-primary-fg: var(--bio-neutral-0);
+
+  --bio-action-accent-bg: var(--bio-coral-600);
+  --bio-action-accent-bg-hover: var(--bio-coral-700);
+  --bio-action-accent-bg-active: var(--bio-coral-800);
+  --bio-action-accent-fg: var(--bio-neutral-0);
+
+  --bio-action-neutral-bg: var(--bio-neutral-100);
+  --bio-action-neutral-bg-hover: var(--bio-neutral-200);
+  --bio-action-neutral-bg-active: var(--bio-neutral-300);
+  --bio-action-neutral-fg: var(--bio-neutral-900);
+
+  --bio-action-ghost-bg-hover: var(--bio-neutral-100);
+  --bio-action-ghost-bg-active: var(--bio-neutral-200);
+  --bio-action-ghost-fg: var(--bio-neutral-800);
+
+  --bio-action-danger-bg: var(--bio-red-600);
+  --bio-action-danger-bg-hover: #a92222;
+  --bio-action-danger-bg-active: #8c1c1c;
+  --bio-action-danger-fg: var(--bio-neutral-0);
+
+  --bio-action-disabled-bg: var(--bio-neutral-100);
+  --bio-action-disabled-fg: var(--bio-neutral-400);
+
+  // -- Feedback --
+  --bio-success-fg: var(--bio-green-600);
+  --bio-success-bg: var(--bio-green-50);
+  --bio-success-border: #a9e0c8;
+  --bio-warning-fg: var(--bio-amber-600);
+  --bio-warning-bg: var(--bio-amber-50);
+  --bio-warning-border: #f3d9a4;
+  --bio-danger-fg: var(--bio-red-600);
+  --bio-danger-bg: var(--bio-red-50);
+  --bio-danger-border: #f4bcbc;
+  --bio-info-fg: var(--bio-blue-600);
+  --bio-info-bg: var(--bio-blue-50);
+  --bio-info-border: #b6d9f2;
+
+  // -- Focus --
+  --bio-focus-ring: var(--bio-indigo-500);
+  --bio-focus-ring-width: 2px;
+  --bio-focus-ring-offset: 2px;
+
+  // -- Elevation (contact shadow + ambient shadow) --
+  --bio-elevation-0: none;
+  --bio-elevation-1:
+    0 1px 2px rgb(23 22 21 / 6%), 0 1px 3px rgb(23 22 21 / 8%);
+  --bio-elevation-2:
+    0 2px 4px rgb(23 22 21 / 6%), 0 4px 12px rgb(23 22 21 / 8%);
+  --bio-elevation-3:
+    0 2px 6px rgb(23 22 21 / 6%), 0 8px 24px rgb(23 22 21 / 12%);
+  --bio-elevation-4:
+    0 4px 10px rgb(23 22 21 / 8%), 0 16px 48px rgb(23 22 21 / 16%);
+}
+
+// =============================================================================
+// TIER 2 - SEMANTIC (DARK)
+//
+// Bound twice, deliberately:
+//   1. [data-theme='dark']  - an explicit user choice always wins.
+//   2. the media query, guarded by :not([data-theme='light']) - so "system"
+//      follows the OS while an explicit light choice still overrides it.
+// Only tier-2 names are rebound. No component stylesheet knows a theme exists.
+// =============================================================================
+
+@mixin bio-dark-theme {
+  color-scheme: dark;
+
+  --bio-surface-canvas: var(--bio-ink-900);
+  --bio-surface-default: var(--bio-ink-850);
+  --bio-surface-raised: var(--bio-ink-800);
+  --bio-surface-sunken: var(--bio-ink-950);
+  --bio-surface-inverse: var(--bio-neutral-100);
+  --bio-surface-overlay: rgb(0 0 0 / 65%);
+  --bio-surface-tint: var(--bio-indigo-950);
+  --bio-surface-skeleton: var(--bio-ink-700);
+  --bio-surface-skeleton-shine: var(--bio-ink-600);
+
+  --bio-text-primary: #f2f1ef;
+  --bio-text-secondary: #cecbc5;
+  --bio-text-muted: #a5a29b;
+  --bio-text-disabled: #6d6b73;
+  --bio-text-inverse: var(--bio-neutral-900);
+  --bio-text-link: var(--bio-indigo-300);
+  --bio-text-accent: var(--bio-coral-300);
+  --bio-text-on-accent: var(--bio-neutral-0);
+
+  --bio-border-subtle: var(--bio-ink-700);
+  --bio-border-default: var(--bio-ink-600);
+  --bio-border-strong: var(--bio-ink-500);
+  --bio-border-inverse: var(--bio-neutral-300);
+
+  --bio-action-primary-bg: var(--bio-indigo-400);
+  --bio-action-primary-bg-hover: var(--bio-indigo-300);
+  --bio-action-primary-bg-active: var(--bio-indigo-200);
+  --bio-action-primary-fg: var(--bio-indigo-950);
+
+  --bio-action-accent-bg: var(--bio-coral-400);
+  --bio-action-accent-bg-hover: var(--bio-coral-300);
+  --bio-action-accent-bg-active: var(--bio-coral-200);
+  --bio-action-accent-fg: #3a1206;
+
+  --bio-action-neutral-bg: var(--bio-ink-700);
+  --bio-action-neutral-bg-hover: var(--bio-ink-600);
+  --bio-action-neutral-bg-active: var(--bio-ink-500);
+  --bio-action-neutral-fg: #f2f1ef;
+
+  --bio-action-ghost-bg-hover: var(--bio-ink-800);
+  --bio-action-ghost-bg-active: var(--bio-ink-700);
+  --bio-action-ghost-fg: #cecbc5;
+
+  --bio-action-danger-bg: var(--bio-red-300);
+  --bio-action-danger-bg-hover: #fcaaaa;
+  --bio-action-danger-bg-active: #fdc4c4;
+  --bio-action-danger-fg: #40100f;
+
+  --bio-action-disabled-bg: var(--bio-ink-800);
+  --bio-action-disabled-fg: #6d6b73;
+
+  --bio-success-fg: var(--bio-green-300);
+  --bio-success-bg: #0d271f;
+  --bio-success-border: #1c5943;
+  --bio-warning-fg: var(--bio-amber-300);
+  --bio-warning-bg: #2b1f0a;
+  --bio-warning-border: #6b4a12;
+  --bio-danger-fg: var(--bio-red-300);
+  --bio-danger-bg: #2c1414;
+  --bio-danger-border: #6d2a2a;
+  --bio-info-fg: var(--bio-blue-300);
+  --bio-info-bg: #0b1f2e;
+  --bio-info-border: #1d4a6b;
+
+  --bio-focus-ring: var(--bio-indigo-300);
+
+  // Shadows are near-invisible on dark surfaces, so elevation is carried by the
+  // surface step plus a hairline. Both mechanisms live in the tokens.
+  --bio-elevation-0: none;
+  --bio-elevation-1: 0 1px 2px rgb(0 0 0 / 40%);
+  --bio-elevation-2: 0 2px 8px rgb(0 0 0 / 45%);
+  --bio-elevation-3: 0 8px 24px rgb(0 0 0 / 55%);
+  --bio-elevation-4: 0 16px 48px rgb(0 0 0 / 65%);
+}
+
+:root[data-theme='dark'] {
+  @include bio-dark-theme;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    @include bio-dark-theme;
+  }
+}
+
+// =============================================================================
+// REDUCED MOTION - rebind the duration tokens once, globally.
+// No component ever writes its own prefers-reduced-motion query for duration.
+// =============================================================================
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --bio-duration-fast: 0.01ms;
+    --bio-duration-base: 0.01ms;
+    --bio-duration-slow: 0.01ms;
+    --bio-ease-spring: linear;
+  }
+}

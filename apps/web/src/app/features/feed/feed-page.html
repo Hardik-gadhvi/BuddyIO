@@ -1,0 +1,107 @@
+<div class="feed">
+  <header class="feed__header">
+    <h1 class="feed__title">Home</h1>
+    <p class="feed__subtitle">Newest first, from the people you follow.</p>
+  </header>
+
+  @switch (facade.status()) {
+    <!-- ------------------------------ Loading ------------------------------ -->
+    @case ('loading') {
+      <div class="feed__list" aria-busy="true" aria-live="polite" aria-label="Loading your feed">
+        @for (row of skeletonRows; track row) {
+          <bio-post-card-skeleton />
+        }
+      </div>
+    }
+
+    <!-- ------------------------- First-page failure ------------------------ -->
+    @case ('error') {
+      @if (facade.error(); as error) {
+        <bio-error-state
+          [error]="error"
+          title="We could not load your feed"
+          (retry)="facade.retry()"
+        />
+      }
+    }
+
+    <!-- ------------------------------- Ready ------------------------------- -->
+    @default {
+      @if (facade.isEmpty()) {
+        <bio-empty-state
+          icon="sparkle"
+          title="Your feed is quiet"
+          body="Follow a few accounts and their posts will show up here. Explore is a good place to start."
+        >
+          <a bioButton variant="primary" size="md" routerLink="/explore">Find people to follow</a>
+        </bio-empty-state>
+      } @else {
+        <ul class="feed__list" role="list">
+          @for (post of facade.posts(); track post.id) {
+            <li>
+              <bio-post-card
+                [post]="post"
+                [pending]="facade.isPending(post.id)"
+                (like)="onLike($event)"
+                (save)="onSave($event)"
+                (openComments)="onOpenComments($event)"
+                (share)="onShare($event)"
+                (menuAction)="onMenuAction($event)"
+              />
+            </li>
+          }
+        </ul>
+
+        <!-- --------------------------- Pagination -------------------------- -->
+        <div class="feed__more">
+          @if (facade.hasMore()) {
+            <!--
+              Prefetch sentinel. Purely an enhancement: the button below is the
+              real control, so the list is never a keyboard dead end.
+            -->
+            <div
+              bioIntersect
+              [disabled]="facade.isLoadingMore() || !!facade.loadMoreError()"
+              (bioIntersect)="facade.loadMore()"
+              aria-hidden="true"
+            ></div>
+
+            @if (facade.isLoadingMore()) {
+              <div aria-busy="true" aria-live="polite" aria-label="Loading more posts">
+                <bio-post-card-skeleton />
+              </div>
+            }
+
+            <!--
+              A next-page failure renders INLINE, below what already loaded.
+              Replacing the whole feed with an error would throw away content
+              the user was reading (docs/04 section 2).
+            -->
+            @if (facade.loadMoreError(); as error) {
+              <p class="feed__more-error" role="alert">
+                <bio-icon name="alert-circle" [size]="18" />
+                {{ error.message }}
+              </p>
+            }
+
+            <button
+              bioButton
+              variant="neutral"
+              size="md"
+              [loading]="facade.isLoadingMore()"
+              (click)="facade.loadMore()"
+            >
+              {{ facade.loadMoreError() ? 'Try again' : 'Load more posts' }}
+            </button>
+          } @else {
+            <!-- An explicit terminus, never an endless spinner. -->
+            <p class="feed__end">
+              <bio-icon name="check" [size]="18" />
+              You are all caught up
+            </p>
+          }
+        </div>
+      }
+    }
+  }
+</div>

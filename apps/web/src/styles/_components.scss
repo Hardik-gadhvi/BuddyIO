@@ -1,0 +1,242 @@
+// =============================================================================
+// BuddyIO - global component classes.
+//
+// This file exists for exactly one reason: directive-based primitives (like
+// `[bioButton]`) attach appearance to a NATIVE element, and a directive cannot
+// carry a scoped stylesheet. Everything else in the product is a component with
+// its own styles - do not grow this file for convenience.
+// =============================================================================
+
+@use 'mixins' as *;
+
+// -- Button -------------------------------------------------------------------
+.bio-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--bio-space-2);
+  border: 1px solid transparent;
+  border-radius: var(--bio-radius-md);
+  font-family: inherit;
+  font-weight: var(--bio-weight-semibold);
+  line-height: 1;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--bio-duration-fast) var(--bio-ease-standard),
+    border-color var(--bio-duration-fast) var(--bio-ease-standard),
+    color var(--bio-duration-fast) var(--bio-ease-standard);
+
+  @include focus-visible;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+// -- Sizes. `md` is 44px: our own minimum touch target (docs/05, SC 2.5.8).
+.bio-button--sm {
+  min-height: 36px;
+  padding-inline: var(--bio-space-3);
+  font-size: var(--bio-font-size-body-sm);
+}
+
+.bio-button--md {
+  min-height: 44px;
+  padding-inline: var(--bio-space-4);
+  font-size: var(--bio-font-size-body-sm);
+}
+
+.bio-button--lg {
+  min-height: 52px;
+  padding-inline: var(--bio-space-6);
+  font-size: var(--bio-font-size-body);
+}
+
+.bio-button--full {
+  width: 100%;
+}
+
+// Square/circular variant, for a bioButton that contains only an icon.
+// Used where a native <button> is required (e.g. a cdkMenuTriggerFor host)
+// but the icon-button appearance is wanted.
+.bio-button--icon {
+  width: 44px;
+  min-width: 44px;
+  padding-inline: 0;
+  border-radius: var(--bio-radius-circle);
+}
+
+// -- Variants -----------------------------------------------------------------
+.bio-button--primary {
+  background: var(--bio-action-primary-bg);
+  color: var(--bio-action-primary-fg);
+
+  &:hover {
+    background: var(--bio-action-primary-bg-hover);
+  }
+  &:active {
+    background: var(--bio-action-primary-bg-active);
+  }
+}
+
+.bio-button--accent {
+  background: var(--bio-action-accent-bg);
+  color: var(--bio-action-accent-fg);
+
+  &:hover {
+    background: var(--bio-action-accent-bg-hover);
+  }
+  &:active {
+    background: var(--bio-action-accent-bg-active);
+  }
+}
+
+.bio-button--neutral {
+  background: var(--bio-action-neutral-bg);
+  color: var(--bio-action-neutral-fg);
+  border-color: var(--bio-border-subtle);
+
+  &:hover {
+    background: var(--bio-action-neutral-bg-hover);
+  }
+  &:active {
+    background: var(--bio-action-neutral-bg-active);
+  }
+}
+
+.bio-button--ghost {
+  background: transparent;
+  color: var(--bio-action-ghost-fg);
+
+  &:hover {
+    background: var(--bio-action-ghost-bg-hover);
+  }
+  &:active {
+    background: var(--bio-action-ghost-bg-active);
+  }
+}
+
+.bio-button--danger {
+  background: var(--bio-action-danger-bg);
+  color: var(--bio-action-danger-fg);
+
+  &:hover {
+    background: var(--bio-action-danger-bg-hover);
+  }
+  &:active {
+    background: var(--bio-action-danger-bg-active);
+  }
+}
+
+// -- Inert states -------------------------------------------------------------
+// `[aria-disabled]` covers anchors, which cannot be truly disabled.
+.bio-button:disabled,
+.bio-button[aria-disabled='true'] {
+  background: var(--bio-action-disabled-bg);
+  color: var(--bio-action-disabled-fg);
+  border-color: transparent;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+// -- Loading ------------------------------------------------------------------
+// The label is hidden with `color: transparent` rather than removed, so the
+// button keeps its exact width and the layout never jumps mid-mutation.
+.bio-button--loading {
+  color: transparent !important;
+  pointer-events: none;
+}
+
+.bio-button--loading::after {
+  content: '';
+  position: absolute;
+  width: 1.125em;
+  height: 1.125em;
+  border: 2px solid currentcolor;
+  border-radius: var(--bio-radius-circle);
+  border-block-start-color: transparent;
+  color: var(--bio-action-disabled-fg);
+  animation: bio-spin 620ms linear infinite;
+}
+
+.bio-button--primary.bio-button--loading::after,
+.bio-button--accent.bio-button--loading::after,
+.bio-button--danger.bio-button--loading::after {
+  color: var(--bio-action-primary-fg);
+}
+
+@keyframes bio-spin {
+  to {
+    rotate: 360deg;
+  }
+}
+
+// A spinner is the one place motion IS the information, so it keeps turning
+// under reduced-motion - just slowly enough not to be a vestibular trigger.
+@include reduced-motion {
+  .bio-button--loading::after {
+    animation-duration: 1800ms;
+  }
+}
+
+// -- CDK overlay integration --------------------------------------------------
+// The prebuilt overlay CSS ships z-index 1000, which would float menus above
+// our toast layer. Re-anchor the container onto the closed z-index list in
+// _tokens.scss so layering stays reasoned about in one place.
+.cdk-overlay-container {
+  z-index: var(--bio-z-popover);
+}
+
+// -- Menu surface (used with cdkMenu) ----------------------------------------
+.bio-menu {
+  min-width: 208px;
+  padding: var(--bio-space-1);
+  border: 1px solid var(--bio-border-subtle);
+  border-radius: var(--bio-radius-lg);
+  background: var(--bio-surface-raised);
+  box-shadow: var(--bio-elevation-3);
+  outline: none;
+}
+
+.bio-menu__item {
+  display: flex;
+  align-items: center;
+  gap: var(--bio-space-3);
+  width: 100%;
+  min-height: 44px;
+  padding: var(--bio-space-2) var(--bio-space-3);
+  border: none;
+  border-radius: var(--bio-radius-md);
+  background: transparent;
+  color: var(--bio-text-primary);
+  font-size: var(--bio-font-size-body-sm);
+  text-align: start;
+  cursor: pointer;
+
+  @include focus-visible(-2px);
+
+  &:hover {
+    background: var(--bio-action-ghost-bg-hover);
+  }
+
+  &--danger {
+    color: var(--bio-danger-fg);
+  }
+}
+
+.bio-menu__separator {
+  height: 1px;
+  margin: var(--bio-space-1) var(--bio-space-2);
+  background: var(--bio-border-subtle);
+}
+
+// The menu renders in a CDK overlay outside every component's scope, so its
+// internals are styled here rather than with ::ng-deep from a component.
+.bio-menu__check {
+  margin-inline-start: auto;
+  color: var(--bio-action-primary-bg);
+}

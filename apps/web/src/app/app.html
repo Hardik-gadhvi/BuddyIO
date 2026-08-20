@@ -1,0 +1,16 @@
+<router-outlet />
+
+<bio-toast-host />
+
+<!--
+  Route-change announcer. A SPA changes the URL without a page load, so
+  assistive technology gets no navigation event for free; BuddyIoTitleStrategy
+  writes the new page name here after every navigation (docs/05, "Live regions").
+-->
+<span
+  id="bio-route-announcer"
+  class="bio-visually-hidden"
+  role="status"
+  aria-live="polite"
+  aria-atomic="true"
+></span>

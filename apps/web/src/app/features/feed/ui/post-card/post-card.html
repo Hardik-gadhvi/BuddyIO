@@ -1,0 +1,260 @@
+@let current = post();
+
+@if (current.removed; as removal) {
+  <!--
+    Tombstone. A removed post is REPLACED, never silently dropped: a post that
+    vanishes between two scrolls reads as a bug, and moderation actions must be
+    visible to be accountable (docs/03 section 5).
+  -->
+  <article class="post post--tombstone">
+    <bio-icon name="alert-circle" [size]="24" />
+    <p class="post__tombstone-title">This post is no longer available</p>
+    <p class="post__tombstone-body">
+      {{
+        removal.reason === 'deleted-by-author'
+          ? 'The author deleted this post.'
+          : 'This post was removed for breaking our community rules.'
+      }}
+    </p>
+  </article>
+} @else {
+  <article class="post" [attr.aria-busy]="pending() ? 'true' : null">
+    <!-- ============================ Header ============================ -->
+    <header class="post__header">
+      <a class="post__author" [routerLink]="profileLink()">
+        <bio-avatar [user]="current.author" size="md" />
+        <span class="post__author-text">
+          <span class="post__username">
+            {{ current.author.username }}
+            @if (current.author.isVerified) {
+              <bio-icon name="check" [size]="16" label="Verified account" class="post__verified" />
+            }
+          </span>
+          @if (current.location) {
+            <span class="post__location">{{ current.location }}</span>
+          }
+        </span>
+      </a>
+
+      <span class="post__meta">
+        <bio-icon [name]="audience().icon" [size]="16" [label]="audience().label" />
+        <span aria-hidden="true">&middot;</span>
+        <!--
+          The compact form is for scanning; `datetime` and `title` carry the
+          exact instant, so precision is never actually lost.
+        -->
+        <time [attr.datetime]="current.createdAt" [title]="current.createdAt | exactTime">
+          {{ current.createdAt | timeAgo }}
+        </time>
+      </span>
+
+      <!--
+        A native <button>, not <bio-icon-button>: CdkMenuTrigger writes
+        aria-haspopup/aria-expanded onto its host element, and those must land
+        on the focusable control itself rather than on a wrapper.
+      -->
+      <button
+        bioButton
+        variant="ghost"
+        size="sm"
+        class="bio-button--icon"
+        aria-label="More options for this post"
+        [cdkMenuTriggerFor]="postMenu"
+      >
+        <bio-icon name="more-horizontal" [size]="20" />
+      </button>
+    </header>
+
+    <!-- ============================= Media ============================ -->
+    @if (current.media.length > 0) {
+      <div class="post__media" [style.aspect-ratio]="aspectRatio()">
+        <div
+          #mediaTrack
+          class="post__track"
+          (scroll)="onTrackScroll()"
+          [attr.tabindex]="mediaCount() > 1 ? 0 : null"
+          [attr.role]="mediaCount() > 1 ? 'group' : null"
+          [attr.aria-label]="
+            mediaCount() > 1 ? mediaCount() + ' photos. Use arrow keys to scroll.' : null
+          "
+        >
+          @for (item of current.media; track item.id; let i = $index) {
+            <img
+              class="post__image"
+              [src]="item.url"
+              [width]="item.width"
+              [height]="item.height"
+              [alt]="mediaAlt(i)"
+              [attr.loading]="$first ? 'eager' : 'lazy'"
+              decoding="async"
+            />
+          }
+        </div>
+
+        @if (mediaCount() > 1) {
+          <!-- Pointer users swipe; these give keyboard and mouse users the same reach. -->
+          @if (activeMedia() > 0) {
+            <div class="post__pager post__pager--prev">
+              <bio-icon-button
+                icon="chevron-left"
+                label="Previous photo"
+                variant="neutral"
+                [boxSize]="32"
+                [iconSize]="16"
+                (action)="goTo(activeMedia() - 1)"
+              />
+            </div>
+          }
+          @if (activeMedia() < mediaCount() - 1) {
+            <div class="post__pager post__pager--next">
+              <bio-icon-button
+                icon="chevron-right"
+                label="Next photo"
+                variant="neutral"
+                [boxSize]="32"
+                [iconSize]="16"
+                (action)="goTo(activeMedia() + 1)"
+              />
+            </div>
+          }
+
+          <p class="post__counter" aria-hidden="true">
+            {{ activeMedia() + 1 }}/{{ mediaCount() }}
+          </p>
+
+          <div class="post__dots" aria-hidden="true">
+            @for (item of current.media; track item.id; let i = $index) {
+              <span class="post__dot" [class.post__dot--active]="i === activeMedia()"></span>
+            }
+          </div>
+        }
+      </div>
+    }
+
+    <!-- ========================== Action bar ========================== -->
+    <div class="post__actions">
+      <bio-icon-button
+        [icon]="current.engagement.viewerHasLiked ? 'heart-fill' : 'heart'"
+        [label]="likeLabel()"
+        [pressed]="current.engagement.viewerHasLiked"
+        [iconSize]="24"
+        class="post__like"
+        [class.post__like--on]="current.engagement.viewerHasLiked"
+        (action)="like.emit(current)"
+      />
+
+      <bio-icon-button
+        icon="comment"
+        [label]="
+          current.engagement.canComment
+            ? 'Comment on this post'
+            : 'Comments are turned off for this post'
+        "
+        [iconSize]="24"
+        [disabled]="!current.engagement.canComment"
+        (action)="openComments.emit(current)"
+      />
+
+      <bio-icon-button
+        icon="share"
+        label="Share this post"
+        [iconSize]="24"
+        (action)="share.emit(current)"
+      />
+
+      <span class="bio-spacer"></span>
+
+      <bio-icon-button
+        [icon]="current.engagement.viewerHasSaved ? 'bookmark-fill' : 'bookmark'"
+        [label]="saveLabel()"
+        [pressed]="current.engagement.viewerHasSaved"
+        [iconSize]="24"
+        (action)="save.emit(current)"
+      />
+    </div>
+
+    <!-- ============================ Body ============================= -->
+    <div class="post__body">
+      @if (current.engagement.likeCount > 0) {
+        <p class="post__likes">
+          {{ current.engagement.likeCount | compactCount }}
+          {{ current.engagement.likeCount | plural: 'like' }}
+        </p>
+      }
+
+      <p class="post__caption">
+        <a class="post__caption-author" [routerLink]="profileLink()">{{
+          current.author.username
+        }}</a>
+        @for (token of captionTokens(); track $index) {
+          @switch (token.kind) {
+            @case ('hashtag') {
+              <a class="post__tag" [routerLink]="['/search']" [queryParams]="{ q: '#' + token.value, tab: 'tags' }"
+                >#{{ token.value }}</a
+              >
+            }
+            @case ('mention') {
+              <a class="post__tag" [routerLink]="['/u', token.value]">{{ '@' + token.value }}</a>
+            }
+            @default {
+              <span>{{ token.value }}</span>
+            }
+          }
+        }
+      </p>
+
+      @if (current.hashtags.length > 0) {
+        <p class="post__hashtags">
+          @for (tag of current.hashtags; track tag) {
+            <a class="post__tag" [routerLink]="['/search']" [queryParams]="{ q: '#' + tag, tab: 'tags' }"
+              >#{{ tag }}</a
+            >
+          }
+        </p>
+      }
+
+      @if (current.engagement.commentCount > 0) {
+        <a class="post__view-comments" [routerLink]="postLink()">
+          View
+          {{ current.engagement.commentCount === 1 ? 'the comment' : 'all ' + current.engagement.commentCount + ' comments' }}
+        </a>
+      }
+
+      @for (comment of current.previewComments; track comment.id) {
+        <p class="post__comment">
+          <a class="post__caption-author" [routerLink]="['/u', comment.author.username]">{{
+            comment.author.username
+          }}</a>
+          <span>{{ comment.body }}</span>
+        </p>
+      }
+    </div>
+  </article>
+}
+
+<!-- ============================== Menu ============================== -->
+<ng-template #postMenu>
+  <div class="bio-menu" cdkMenu>
+    <button class="bio-menu__item" cdkMenuItem (cdkMenuItemTriggered)="emitMenu('copy-link')">
+      <bio-icon name="share" [size]="18" />
+      Copy link
+    </button>
+    <button class="bio-menu__item" cdkMenuItem (cdkMenuItemTriggered)="emitMenu('mute')">
+      <bio-icon name="bell" [size]="18" />
+      Mute this account
+    </button>
+    <button class="bio-menu__item" cdkMenuItem (cdkMenuItemTriggered)="emitMenu('unfollow')">
+      <bio-icon name="users" [size]="18" />
+      Unfollow
+    </button>
+    <div class="bio-menu__separator"></div>
+    <button
+      class="bio-menu__item bio-menu__item--danger"
+      cdkMenuItem
+      (cdkMenuItemTriggered)="emitMenu('report')"
+    >
+      <bio-icon name="flag" [size]="18" />
+      Report post
+    </button>
+  </div>
+</ng-template>

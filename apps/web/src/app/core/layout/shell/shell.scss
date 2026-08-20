@@ -1,0 +1,394 @@
+@use 'mixins' as *;
+
+:host {
+  display: block;
+}
+
+/*
+ * One variable drives the whole layout: the width reserved for primary
+ * navigation. 0 on mobile (bottom bar), 88px rail at md, 240px sidebar at lg.
+ * The top bar and main column both offset by it, so there is a single place to
+ * change and nothing can drift out of alignment.
+ */
+.shell {
+  --shell-nav-w: 0px;
+
+  min-height: 100dvh;
+
+  @include bp(md) {
+    --shell-nav-w: var(--bio-layout-rail);
+  }
+
+  @include bp(lg) {
+    --shell-nav-w: var(--bio-layout-sidebar);
+  }
+}
+
+/* =============================== Top bar ================================ */
+.topbar {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: var(--bio-z-nav);
+  display: flex;
+  align-items: center;
+  gap: var(--bio-space-2);
+  height: var(--bio-layout-topbar-h);
+  padding-inline: var(--bio-space-3);
+  margin-inline-start: var(--shell-nav-w);
+  background: color-mix(in srgb, var(--bio-surface-default) 88%, transparent);
+  backdrop-filter: blur(12px);
+  border-block-end: 1px solid var(--bio-border-subtle);
+
+  @include bp(md) {
+    height: var(--bio-layout-topbar-h-md);
+    padding-inline: var(--bio-space-6);
+  }
+}
+
+.topbar__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--bio-space-2);
+  border-radius: var(--bio-radius-md);
+  text-decoration: none;
+
+  @include focus-visible;
+
+  /* The sidebar carries the brand once there is a sidebar. */
+  @include bp(md) {
+    display: none;
+  }
+}
+
+.topbar__wordmark {
+  font-size: var(--bio-font-size-h4);
+  font-weight: var(--bio-weight-bold);
+  letter-spacing: -0.03em;
+  color: var(--bio-text-primary);
+}
+
+.wordmark-accent {
+  color: var(--bio-text-accent);
+}
+
+.topbar__search {
+  display: none;
+  align-items: center;
+  gap: var(--bio-space-2);
+  flex: 1;
+  max-width: 340px;
+  min-height: 40px;
+  padding-inline: var(--bio-space-3);
+  border: 1px solid var(--bio-border-default);
+  border-radius: var(--bio-radius-pill);
+  background: var(--bio-surface-sunken);
+  color: var(--bio-text-muted);
+  font-size: var(--bio-font-size-body-sm);
+  text-align: start;
+  cursor: pointer;
+
+  @include focus-visible;
+
+  &:hover {
+    border-color: var(--bio-border-strong);
+  }
+
+  @include bp(md) {
+    display: flex;
+  }
+}
+
+.topbar__search-text {
+  @include truncate;
+}
+
+.topbar__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--bio-space-1);
+  margin-inline-start: auto;
+}
+
+.topbar__search-compact {
+  @include bp(md) {
+    display: none;
+  }
+}
+
+.topbar__avatar-trigger {
+  padding: 0;
+}
+
+/* =============================== Sidebar ================================ */
+.sidebar {
+  display: none;
+  position: fixed;
+  inset-block: 0;
+  inset-inline-start: 0;
+  z-index: var(--bio-z-nav);
+  width: var(--shell-nav-w);
+  flex-direction: column;
+  gap: var(--bio-space-2);
+  padding: var(--bio-space-4) var(--bio-space-3);
+  border-inline-end: 1px solid var(--bio-border-subtle);
+  background: var(--bio-surface-default);
+
+  @include bp(md) {
+    display: flex;
+    align-items: center;
+  }
+
+  @include bp(lg) {
+    align-items: stretch;
+    padding-inline: var(--bio-space-4);
+  }
+}
+
+/* Brand appears here from md up, where the top bar drops it. Sized to match
+   the top bar so the two align across the sidebar boundary. */
+.sidebar__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--bio-space-2);
+  height: var(--bio-layout-topbar-h-md);
+  padding-inline: var(--bio-space-2);
+  border-radius: var(--bio-radius-md);
+  text-decoration: none;
+  flex: none;
+
+  @include focus-visible;
+
+  @include bp(md) {
+    justify-content: center;
+    padding-inline: 0;
+  }
+
+  @include bp(lg) {
+    justify-content: flex-start;
+    padding-inline: var(--bio-space-3);
+  }
+}
+
+.sidebar__wordmark {
+  font-size: var(--bio-font-size-h3);
+  font-weight: var(--bio-weight-bold);
+  letter-spacing: -0.03em;
+  color: var(--bio-text-primary);
+
+  /* Rail mode shows the mark alone. */
+  display: none;
+
+  @include bp(lg) {
+    display: block;
+  }
+}
+
+.sidebar__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bio-space-1);
+  width: 100%;
+  margin-block-start: var(--bio-space-2);
+}
+
+.sidebar__item {
+  display: flex;
+  align-items: center;
+  gap: var(--bio-space-3);
+  min-height: 48px;
+  padding-inline: var(--bio-space-3);
+  border-radius: var(--bio-radius-md);
+  color: var(--bio-text-secondary);
+  font-size: var(--bio-font-size-body-sm);
+  font-weight: var(--bio-weight-medium);
+  text-decoration: none;
+  transition: background-color var(--bio-duration-fast) var(--bio-ease-standard);
+
+  @include focus-visible(-2px);
+
+  &:hover {
+    background: var(--bio-action-ghost-bg-hover);
+    text-decoration: none;
+  }
+
+  /* Active is carried by weight + a filled icon + aria-current, never by
+     colour alone (docs/05, "Colour and contrast"). */
+  &--active {
+    color: var(--bio-text-primary);
+    font-weight: var(--bio-weight-semibold);
+    background: var(--bio-surface-tint);
+  }
+
+  @include bp(md) {
+    justify-content: center;
+    padding-inline: 0;
+  }
+
+  @include bp(lg) {
+    justify-content: flex-start;
+    padding-inline: var(--bio-space-3);
+  }
+}
+
+.sidebar__icon {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+}
+
+.sidebar__badge {
+  position: absolute;
+  inset-block-start: -4px;
+  inset-inline-start: 12px;
+}
+
+.sidebar__label,
+.sidebar__create-label,
+.sidebar__account-text {
+  display: none;
+
+  @include bp(lg) {
+    display: block;
+  }
+}
+
+.sidebar__create {
+  margin-block-start: var(--bio-space-2);
+
+  @include bp(md) {
+    width: 44px;
+    padding-inline: 0;
+  }
+
+  @include bp(lg) {
+    width: 100%;
+    padding-inline: var(--bio-space-4);
+  }
+}
+
+.sidebar__account {
+  display: flex;
+  align-items: center;
+  gap: var(--bio-space-3);
+  margin-block-start: auto;
+  padding: var(--bio-space-2);
+  border-radius: var(--bio-radius-md);
+  color: inherit;
+  text-decoration: none;
+  min-width: 0;
+
+  @include focus-visible(-2px);
+
+  &:hover {
+    background: var(--bio-action-ghost-bg-hover);
+    text-decoration: none;
+  }
+}
+
+.sidebar__account-text {
+  min-width: 0;
+}
+
+.sidebar__account-name {
+  display: block;
+  font-size: var(--bio-font-size-body-sm);
+  font-weight: var(--bio-weight-semibold);
+  @include truncate;
+}
+
+.sidebar__account-handle {
+  display: block;
+  font-size: var(--bio-font-size-caption);
+  color: var(--bio-text-muted);
+  @include truncate;
+}
+
+/* ================================ Main ================================== */
+.main {
+  margin-inline-start: var(--shell-nav-w);
+  /* Clears the fixed bottom bar plus the device's home indicator. */
+  padding-block-end: calc(var(--bio-layout-bottomnav-h) + env(safe-area-inset-bottom, 0px));
+
+  @include bp(md) {
+    padding-block-end: var(--bio-space-8);
+  }
+}
+
+/* ============================= Bottom nav =============================== */
+.bottomnav {
+  position: fixed;
+  inset-block-end: 0;
+  inset-inline: 0;
+  z-index: var(--bio-z-nav);
+  background: var(--bio-surface-default);
+  border-block-start: 1px solid var(--bio-border-subtle);
+  @include safe-area-bottom;
+
+  @include bp(md) {
+    display: none;
+  }
+}
+
+.bottomnav__list {
+  display: flex;
+  align-items: stretch;
+  height: var(--bio-layout-bottomnav-h);
+}
+
+.bottomnav__slot {
+  flex: 1;
+  display: flex;
+}
+
+.bottomnav__item {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  color: var(--bio-text-muted);
+  text-decoration: none;
+
+  @include focus-visible(-3px);
+
+  &--active {
+    color: var(--bio-text-primary);
+  }
+}
+
+.bottomnav__icon {
+  position: relative;
+  display: inline-flex;
+}
+
+.bottomnav__badge {
+  position: absolute;
+  inset-block-start: -3px;
+  inset-inline-start: 13px;
+}
+
+.bottomnav__label {
+  font-size: 10px;
+  line-height: 1;
+  font-weight: var(--bio-weight-medium);
+}
+
+.bottomnav__item--active .bottomnav__label {
+  font-weight: var(--bio-weight-semibold);
+}
+
+.bottomnav__create {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  margin: var(--bio-space-2);
+  border: none;
+  border-radius: var(--bio-radius-lg);
+  background: var(--bio-action-primary-bg);
+  color: var(--bio-action-primary-fg);
+  cursor: pointer;
+
+  @include focus-visible(-2px);
+}

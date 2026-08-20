@@ -1,0 +1,26 @@
+# Normalise line endings. Without this, files committed from Windows carry CRLF
+# and every Linux CI run / Docker build shows spurious whole-file diffs.
+* text=auto eol=lf
+
+# Windows-native scripts must keep CRLF or they will not run.
+*.ps1  text eol=crlf
+*.cmd  text eol=crlf
+*.bat  text eol=crlf
+
+# Shell scripts must keep LF or they will not run.
+*.sh   text eol=lf
+
+# Binary assets: never touch, never diff.
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.webp binary
+*.avif binary
+*.woff  binary
+*.woff2 binary
+*.pdf  binary
+*.zip  binary
+*.mp3  binary
+*.webm binary

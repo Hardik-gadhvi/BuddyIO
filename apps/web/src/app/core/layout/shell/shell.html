@@ -1,0 +1,203 @@
+<!-- First tab stop on every page (docs/05, "Keyboard"). -->
+<a class="bio-skip-link" href="#bio-main">Skip to content</a>
+
+<div class="shell">
+  <!-- ============================== Top bar ============================== -->
+  <header class="topbar">
+    <a class="topbar__brand" routerLink="/feed" aria-label="BuddyIO home">
+      <img src="/brand/mark.svg" alt="" width="28" height="28" aria-hidden="true" />
+      <span class="topbar__wordmark">buddy<span class="wordmark-accent">IO</span></span>
+    </a>
+
+    <!-- Real search lands with the search slice; this is its keyboard-reachable
+         entry point, and it explains itself rather than doing nothing. -->
+    <button
+      class="topbar__search"
+      type="button"
+      (click)="notImplemented('Search')"
+      aria-label="Search BuddyIO"
+    >
+      <bio-icon name="search" [size]="18" />
+      <span class="topbar__search-text">Search people, tags and posts</span>
+    </button>
+
+    <div class="topbar__actions">
+      <bio-icon-button
+        icon="search"
+        label="Search BuddyIO"
+        class="topbar__search-compact"
+        (action)="notImplemented('Search')"
+      />
+
+      <button
+        bioButton
+        variant="ghost"
+        size="sm"
+        class="bio-button--icon"
+        [attr.aria-label]="themeLabel()"
+        [cdkMenuTriggerFor]="themeMenu"
+      >
+        <bio-icon [name]="themeIcon()" [size]="20" />
+      </button>
+
+      <button
+        bioButton
+        variant="ghost"
+        size="sm"
+        class="bio-button--icon topbar__avatar-trigger"
+        aria-label="Your account"
+        [cdkMenuTriggerFor]="accountMenu"
+      >
+        <bio-avatar [user]="user()" size="sm" />
+      </button>
+    </div>
+  </header>
+
+  <!-- ============================== Sidebar ============================== -->
+  <nav class="sidebar" aria-label="Primary">
+    <!-- The brand lives here from `md` up, where the top bar drops it. -->
+    <a class="sidebar__brand" routerLink="/feed" aria-label="BuddyIO home">
+      <img src="/brand/mark.svg" alt="" width="32" height="32" aria-hidden="true" />
+      <span class="sidebar__wordmark">buddy<span class="wordmark-accent">IO</span></span>
+    </a>
+
+    <ul class="sidebar__list" role="list">
+      @for (item of navItems; track item.route) {
+        <li>
+          <a
+            class="sidebar__item"
+            [routerLink]="item.route"
+            routerLinkActive="sidebar__item--active"
+            #rla="routerLinkActive"
+            [attr.aria-current]="rla.isActive ? 'page' : null"
+            [attr.aria-label]="navLabel(item.label, item.badge)"
+          >
+            <span class="sidebar__icon">
+              <bio-icon [name]="rla.isActive ? item.iconActive : item.icon" [size]="24" />
+              @if (badgeCount(item.badge); as count) {
+                <bio-badge class="sidebar__badge" [count]="count" [max]="99" />
+              }
+            </span>
+            <span class="sidebar__label">{{ item.label }}</span>
+          </a>
+        </li>
+      }
+    </ul>
+
+    <!-- Create is an action, not a destination - hence a button, not a nav item. -->
+    <button
+      bioButton
+      variant="primary"
+      size="md"
+      class="sidebar__create"
+      (click)="notImplemented('The composer')"
+    >
+      <bio-icon name="plus" [size]="20" />
+      <span class="sidebar__create-label">Create</span>
+    </button>
+
+    @if (user(); as me) {
+      <a class="sidebar__account" [routerLink]="['/u', me.username]">
+        <bio-avatar [user]="me" size="md" />
+        <span class="sidebar__account-text">
+          <span class="sidebar__account-name">{{ me.displayName }}</span>
+          <span class="sidebar__account-handle">{{ '@' + me.username }}</span>
+        </span>
+      </a>
+    }
+  </nav>
+
+  <!-- =============================== Main ================================ -->
+  <!--
+    tabindex="-1" so the route announcer can move focus here on navigation.
+    _base.scss suppresses the ring, because the user did not focus it directly.
+  -->
+  <main id="bio-main" class="main" tabindex="-1">
+    <router-outlet />
+  </main>
+
+  <!-- ============================ Bottom nav ============================= -->
+  <nav class="bottomnav" aria-label="Primary">
+    <ul class="bottomnav__list" role="list">
+      @for (item of navItems; track item.route; let i = $index) {
+        <li class="bottomnav__slot">
+          <a
+            class="bottomnav__item"
+            [routerLink]="item.route"
+            routerLinkActive="bottomnav__item--active"
+            #rlaMobile="routerLinkActive"
+            [attr.aria-current]="rlaMobile.isActive ? 'page' : null"
+            [attr.aria-label]="navLabel(item.label, item.badge)"
+          >
+            <span class="bottomnav__icon">
+              <bio-icon
+                [name]="rlaMobile.isActive ? item.iconActive : item.icon"
+                [size]="24"
+              />
+              @if (badgeCount(item.badge); as count) {
+                <bio-badge class="bottomnav__badge" [count]="count" [max]="9" />
+              }
+            </span>
+            <span class="bottomnav__label">{{ item.label }}</span>
+          </a>
+        </li>
+
+        <!-- Create sits in the middle of the bar, as an elevated action. -->
+        @if (i === 1) {
+          <li class="bottomnav__slot">
+            <button
+              class="bottomnav__create"
+              type="button"
+              aria-label="Create a post"
+              (click)="notImplemented('The composer')"
+            >
+              <bio-icon name="plus" [size]="24" />
+            </button>
+          </li>
+        }
+      }
+    </ul>
+  </nav>
+</div>
+
+<bio-dev-panel />
+
+<!-- ============================== Menus ================================= -->
+<ng-template #themeMenu>
+  <div class="bio-menu" cdkMenu>
+    @for (option of themeOptions; track option.value) {
+      <button
+        class="bio-menu__item"
+        cdkMenuItem
+        [attr.aria-current]="theme.preference() === option.value ? 'true' : null"
+        (cdkMenuItemTriggered)="setTheme(option.value)"
+      >
+        <bio-icon [name]="option.icon" [size]="18" />
+        {{ option.label }}
+        @if (theme.preference() === option.value) {
+          <bio-icon name="check" [size]="18" class="bio-menu__check" label="Selected" />
+        }
+      </button>
+    }
+  </div>
+</ng-template>
+
+<ng-template #accountMenu>
+  <div class="bio-menu" cdkMenu>
+    @if (user(); as me) {
+      <a class="bio-menu__item" cdkMenuItem [routerLink]="['/u', me.username]">
+        <bio-icon name="users" [size]="18" />
+        Your profile
+      </a>
+    }
+    <a class="bio-menu__item" cdkMenuItem routerLink="/settings">
+      <bio-icon name="settings" [size]="18" />
+      Settings
+    </a>
+    <div class="bio-menu__separator"></div>
+    <button class="bio-menu__item" cdkMenuItem (cdkMenuItemTriggered)="notImplemented('Sign out')">
+      <bio-icon name="log-out" [size]="18" />
+      Sign out
+    </button>
+  </div>
+</ng-template>

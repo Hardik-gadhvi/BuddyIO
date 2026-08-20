@@ -1,0 +1,82 @@
+@use 'mixins' as *;
+
+:host {
+  display: block;
+}
+
+.feed {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bio-space-4);
+  width: 100%;
+  /* The feed column never exceeds this, at any viewport width. Extra space
+     becomes a right rail, not longer lines of text (docs/05). */
+  max-width: var(--bio-layout-feed-w);
+  margin-inline: auto;
+  padding-block: var(--bio-space-4) var(--bio-space-12);
+}
+
+.feed__header {
+  padding-inline: var(--bio-space-4);
+
+  @include bp(md) {
+    padding-inline: 0;
+  }
+}
+
+.feed__title {
+  font-size: var(--bio-font-size-h2);
+  line-height: var(--bio-line-height-h2);
+  font-weight: var(--bio-weight-bold);
+  letter-spacing: var(--bio-tracking-snug);
+}
+
+.feed__subtitle {
+  margin-block-start: var(--bio-space-1);
+  font-size: var(--bio-font-size-body-sm);
+  color: var(--bio-text-muted);
+}
+
+.feed__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bio-space-4);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  @include bp(md) {
+    gap: var(--bio-space-6);
+  }
+}
+
+.feed__more {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--bio-space-4);
+  padding-inline: var(--bio-space-4);
+}
+
+.feed__more-error {
+  display: flex;
+  align-items: center;
+  gap: var(--bio-space-2);
+  width: 100%;
+  padding: var(--bio-space-3) var(--bio-space-4);
+  border: 1px solid var(--bio-danger-border);
+  border-radius: var(--bio-radius-md);
+  background: var(--bio-danger-bg);
+  color: var(--bio-danger-fg);
+  font-size: var(--bio-font-size-body-sm);
+  text-wrap: pretty;
+}
+
+.feed__end {
+  display: flex;
+  align-items: center;
+  gap: var(--bio-space-2);
+  padding-block: var(--bio-space-6);
+  color: var(--bio-text-muted);
+  font-size: var(--bio-font-size-body-sm);
+}

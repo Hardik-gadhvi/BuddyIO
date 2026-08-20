@@ -1,0 +1,294 @@
+@use 'mixins' as *;
+
+:host {
+  display: block;
+}
+
+.post {
+  background: var(--bio-surface-default);
+  border-block: 1px solid var(--bio-border-subtle);
+
+  /*
+   * Mobile: media runs edge to edge and the card is separated by hairlines,
+   * not shadows. Rounded corners against a screen edge read as a rendering
+   * bug (docs/02 section 4), so the radius only appears once there is a
+   * gutter to sit inside.
+   */
+  @include bp(md) {
+    border: 1px solid var(--bio-border-subtle);
+    border-radius: var(--bio-radius-lg);
+    box-shadow: var(--bio-elevation-1);
+    overflow: hidden;
+  }
+}
+
+/* ------------------------------- Header -------------------------------- */
+.post__header {
+  display: flex;
+  align-items: center;
+  gap: var(--bio-space-2);
+  padding: var(--bio-space-3) var(--bio-space-3) var(--bio-space-3) var(--bio-space-4);
+}
+
+.post__author {
+  display: flex;
+  align-items: center;
+  gap: var(--bio-space-3);
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+  border-radius: var(--bio-radius-md);
+
+  @include focus-visible;
+
+  &:hover .post__username {
+    text-decoration: underline;
+  }
+}
+
+.post__author-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.post__username {
+  display: flex;
+  align-items: center;
+  gap: var(--bio-space-1);
+  font-size: var(--bio-font-size-body-sm);
+  font-weight: var(--bio-weight-semibold);
+  color: var(--bio-text-primary);
+  @include truncate;
+}
+
+.post__verified {
+  color: var(--bio-action-primary-bg);
+}
+
+.post__location {
+  font-size: var(--bio-font-size-caption);
+  color: var(--bio-text-muted);
+  @include truncate;
+}
+
+.post__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--bio-space-1);
+  margin-inline-start: auto;
+  font-size: var(--bio-font-size-caption);
+  color: var(--bio-text-muted);
+  white-space: nowrap;
+}
+
+/* -------------------------------- Media -------------------------------- */
+.post__media {
+  position: relative;
+  width: 100%;
+  /* aspect-ratio is bound inline from the media's intrinsic size: the box is
+     reserved before a byte loads, so CLS is structurally impossible. */
+  background: var(--bio-surface-sunken);
+}
+
+.post__track {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  @include focus-visible(-3px);
+}
+
+.post__image {
+  flex: 0 0 100%;
+  width: 100%;
+  height: 100%;
+  /* `contain`, never `cover`: letterbox rather than silently crop the
+     author's composition. */
+  object-fit: contain;
+  scroll-snap-align: center;
+}
+
+.post__pager {
+  position: absolute;
+  inset-block-start: 50%;
+  translate: 0 -50%;
+  opacity: 0.9;
+
+  &--prev {
+    inset-inline-start: var(--bio-space-2);
+  }
+
+  &--next {
+    inset-inline-end: var(--bio-space-2);
+  }
+}
+
+.post__counter {
+  position: absolute;
+  inset-block-start: var(--bio-space-2);
+  inset-inline-end: var(--bio-space-2);
+  padding: 2px var(--bio-space-2);
+  border-radius: var(--bio-radius-pill);
+  background: var(--bio-surface-inverse);
+  color: var(--bio-text-inverse);
+  font-size: var(--bio-font-size-overline);
+  font-variant-numeric: tabular-nums;
+  opacity: 0.82;
+}
+
+.post__dots {
+  position: absolute;
+  inset-block-end: var(--bio-space-3);
+  inset-inline: 0;
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+}
+
+.post__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--bio-radius-circle);
+  background: var(--bio-neutral-0);
+  opacity: 0.45;
+  transition: opacity var(--bio-duration-fast) var(--bio-ease-standard);
+
+  &--active {
+    opacity: 1;
+  }
+}
+
+/* ------------------------------ Actions -------------------------------- */
+.post__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--bio-space-1);
+  padding: var(--bio-space-2) var(--bio-space-2) 0;
+}
+
+.post__like--on {
+  color: var(--bio-text-accent);
+  animation: post-like-pop var(--bio-duration-slow) var(--bio-ease-spring);
+}
+
+@keyframes post-like-pop {
+  0% {
+    scale: 1;
+  }
+  45% {
+    scale: 1.22;
+  }
+  100% {
+    scale: 1;
+  }
+}
+
+/* The overshoot is flourish; the FILLED heart is the actual state, so the
+   information survives with the animation removed. */
+@include reduced-motion {
+  .post__like--on {
+    animation: none;
+  }
+}
+
+/* -------------------------------- Body --------------------------------- */
+.post__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bio-space-1);
+  padding: var(--bio-space-2) var(--bio-space-4) var(--bio-space-4);
+}
+
+.post__likes {
+  font-size: var(--bio-font-size-body-sm);
+  font-weight: var(--bio-weight-semibold);
+  font-variant-numeric: tabular-nums;
+}
+
+.post__caption,
+.post__comment {
+  font-size: var(--bio-font-size-body-sm);
+  line-height: var(--bio-line-height-body-sm);
+  color: var(--bio-text-primary);
+  @include wrap-anywhere;
+}
+
+.post__caption-author {
+  margin-inline-end: 0.35em;
+  font-weight: var(--bio-weight-semibold);
+  color: var(--bio-text-primary);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.post__hashtags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--bio-space-2);
+  font-size: var(--bio-font-size-body-sm);
+}
+
+.post__tag {
+  color: var(--bio-text-link);
+  text-decoration: none;
+  border-radius: var(--bio-radius-xs);
+
+  @include focus-visible;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.post__view-comments {
+  align-self: flex-start;
+  font-size: var(--bio-font-size-body-sm);
+  color: var(--bio-text-muted);
+  text-decoration: none;
+  border-radius: var(--bio-radius-xs);
+
+  @include focus-visible;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+/* ------------------------------ Tombstone ------------------------------ */
+.post--tombstone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--bio-space-2);
+  padding: var(--bio-space-10) var(--bio-space-6);
+  text-align: center;
+  color: var(--bio-text-muted);
+
+  bio-icon {
+    color: var(--bio-text-disabled);
+  }
+}
+
+.post__tombstone-title {
+  font-size: var(--bio-font-size-body);
+  font-weight: var(--bio-weight-semibold);
+  color: var(--bio-text-secondary);
+}
+
+.post__tombstone-body {
+  font-size: var(--bio-font-size-body-sm);
+  max-width: 40ch;
+  text-wrap: pretty;
+}

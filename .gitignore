@@ -1,0 +1,42 @@
+# ---- Node / Angular ----
+node_modules/
+.angular/
+dist/
+tmp/
+out-tsc/
+coverage/
+*.tsbuildinfo
+.vite/
+
+# ---- .NET (Phase 2+) ----
+bin/
+obj/
+*.user
+*.suo
+.vs/
+artifacts/
+
+# ---- Secrets & local config (NEVER commit) ----
+.env
+.env.*
+!.env.example
+*.pfx
+*.p12
+*.pem
+appsettings.Development.json
+appsettings.Local.json
+secrets.json
+*.bicepparam.local
+.deploy-secrets.ps1
+.azure/
+
+# ---- Editors / OS ----
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
+
+# ---- Test output ----
+playwright-report/
+test-results/
+blob-report/

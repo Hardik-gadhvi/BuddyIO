@@ -1,0 +1,93 @@
+// =============================================================================
+// BuddyIO - Base element styling and global affordances.
+// =============================================================================
+
+@use 'mixins' as *;
+
+html {
+  // Light is the default binding; `color-scheme` is flipped by the dark mixin.
+  color-scheme: light;
+  background: var(--bio-surface-canvas);
+}
+
+body {
+  background: var(--bio-surface-canvas);
+  // Prevent the whole page from scrolling sideways, whatever a child does.
+  overflow-x: hidden;
+}
+
+// -- Focus --------------------------------------------------------------------
+// One ring, defined once. Components use the focus-visible() mixin; this is the
+// global backstop for anything that slips through.
+:focus-visible {
+  @include focus-ring;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+// -- Links --------------------------------------------------------------------
+a {
+  color: var(--bio-text-link);
+  text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
+  text-underline-offset: 0.18em;
+  transition: color var(--bio-duration-fast) var(--bio-ease-standard);
+}
+
+a:hover {
+  text-decoration: underline;
+  text-decoration-color: currentColor;
+}
+
+// -- Selection ----------------------------------------------------------------
+::selection {
+  background: var(--bio-indigo-200);
+  color: var(--bio-neutral-950);
+}
+
+// -- Scrollbars ---------------------------------------------------------------
+* {
+  @include thin-scrollbar;
+}
+
+// -- Skip link ----------------------------------------------------------------
+// The first tab stop on every page. Visible only when focused, and it must beat
+// every other layer (hence --bio-z-skip-link).
+.bio-skip-link {
+  position: fixed;
+  inset-block-start: var(--bio-space-2);
+  inset-inline-start: var(--bio-space-2);
+  z-index: var(--bio-z-skip-link);
+  padding: var(--bio-space-3) var(--bio-space-4);
+  background: var(--bio-action-primary-bg);
+  color: var(--bio-action-primary-fg);
+  border-radius: var(--bio-radius-md);
+  box-shadow: var(--bio-elevation-3);
+  font-weight: var(--bio-weight-semibold);
+  text-decoration: none;
+  translate: 0 -200%;
+  transition: translate var(--bio-duration-base) var(--bio-ease-decelerate);
+}
+
+.bio-skip-link:focus-visible {
+  translate: 0 0;
+}
+
+// -- Route-transition target --------------------------------------------------
+// Focus is moved here on navigation; it must not paint a ring, because the user
+// did not focus it deliberately - the announcement is what matters.
+[tabindex='-1']:focus {
+  outline: none;
+}
+
+// -- Reduced-transparency / forced colours ------------------------------------
+@media (forced-colors: active) {
+  // In forced-colours mode the OS supplies colour; our job is to keep borders
+  // present so structure survives.
+  .bio-skip-link,
+  button,
+  [role='button'] {
+    border: 1px solid ButtonBorder;
+  }
+}

@@ -1,0 +1,125 @@
+// =============================================================================
+// BuddyIO - Typography. Every type style is a class or an element default,
+// so no component re-declares a font-size/line-height pair by hand.
+// =============================================================================
+
+body {
+  font-family: var(--bio-font-sans);
+  font-size: var(--bio-font-size-body);
+  line-height: var(--bio-line-height-body);
+  font-weight: var(--bio-weight-regular);
+  color: var(--bio-text-primary);
+  // Inter's optical sizing and contextual alternates.
+  font-optical-sizing: auto;
+  font-feature-settings: 'cv05' 1, 'ss03' 1;
+}
+
+@mixin bio-type($size, $line, $weight: var(--bio-weight-regular), $tracking: var(--bio-tracking-normal)) {
+  font-size: $size;
+  line-height: $line;
+  font-weight: $weight;
+  letter-spacing: $tracking;
+}
+
+.bio-type-display {
+  @include bio-type(
+    var(--bio-font-size-display),
+    var(--bio-line-height-display),
+    var(--bio-weight-bold),
+    var(--bio-tracking-tight)
+  );
+}
+
+.bio-type-h1,
+h1 {
+  @include bio-type(
+    var(--bio-font-size-h1),
+    var(--bio-line-height-h1),
+    var(--bio-weight-bold),
+    var(--bio-tracking-tight)
+  );
+}
+
+.bio-type-h2,
+h2 {
+  @include bio-type(
+    var(--bio-font-size-h2),
+    var(--bio-line-height-h2),
+    var(--bio-weight-semibold),
+    var(--bio-tracking-snug)
+  );
+}
+
+.bio-type-h3,
+h3 {
+  @include bio-type(
+    var(--bio-font-size-h3),
+    var(--bio-line-height-h3),
+    var(--bio-weight-semibold),
+    var(--bio-tracking-snug)
+  );
+}
+
+.bio-type-h4,
+h4 {
+  @include bio-type(
+    var(--bio-font-size-h4),
+    var(--bio-line-height-h4),
+    var(--bio-weight-semibold)
+  );
+}
+
+.bio-type-body-lg {
+  @include bio-type(var(--bio-font-size-body-lg), var(--bio-line-height-body-lg));
+}
+
+.bio-type-body {
+  @include bio-type(var(--bio-font-size-body), var(--bio-line-height-body));
+}
+
+.bio-type-body-sm {
+  @include bio-type(var(--bio-font-size-body-sm), var(--bio-line-height-body-sm));
+}
+
+.bio-type-caption {
+  @include bio-type(var(--bio-font-size-caption), var(--bio-line-height-caption));
+}
+
+.bio-type-overline {
+  @include bio-type(
+    var(--bio-font-size-overline),
+    var(--bio-line-height-overline),
+    var(--bio-weight-semibold),
+    var(--bio-tracking-wide)
+  );
+  text-transform: uppercase;
+}
+
+// -- Emphasis helpers ---------------------------------------------------------
+.bio-text-muted {
+  color: var(--bio-text-muted);
+}
+
+.bio-text-secondary {
+  color: var(--bio-text-secondary);
+}
+
+.bio-text-accent {
+  color: var(--bio-text-accent);
+}
+
+.bio-measure {
+  max-width: var(--bio-measure);
+}
+
+strong,
+b {
+  font-weight: var(--bio-weight-semibold);
+}
+
+code,
+kbd,
+samp {
+  font-family: var(--bio-font-mono);
+  font-size: 0.9375em;
+}
