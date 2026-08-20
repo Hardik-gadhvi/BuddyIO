@@ -75,7 +75,7 @@ import { Icon } from '@shared/ui/icon/icon';
           aria-label="Open development controls"
           (click)="open.set(true)"
         >
-          <bio-icon name="settings" [size]="18" />
+          <bio-icon name="settings" [size]="20" />
         </button>
       }
     }

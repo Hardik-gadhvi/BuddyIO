@@ -17,7 +17,7 @@
       (click)="notImplemented('Search')"
       aria-label="Search BuddyIO"
     >
-      <bio-icon name="search" [size]="18" />
+      <bio-icon name="search" [size]="20" />
       <span class="topbar__search-text">Search people, tags and posts</span>
     </button>
 
@@ -172,10 +172,10 @@
         [attr.aria-current]="theme.preference() === option.value ? 'true' : null"
         (cdkMenuItemTriggered)="setTheme(option.value)"
       >
-        <bio-icon [name]="option.icon" [size]="18" />
+        <bio-icon [name]="option.icon" [size]="20" />
         {{ option.label }}
         @if (theme.preference() === option.value) {
-          <bio-icon name="check" [size]="18" class="bio-menu__check" label="Selected" />
+          <bio-icon name="check" [size]="20" class="bio-menu__check" label="Selected" />
         }
       </button>
     }
@@ -186,17 +186,17 @@
   <div class="bio-menu" cdkMenu>
     @if (user(); as me) {
       <a class="bio-menu__item" cdkMenuItem [routerLink]="['/u', me.username]">
-        <bio-icon name="users" [size]="18" />
+        <bio-icon name="users" [size]="20" />
         Your profile
       </a>
     }
     <a class="bio-menu__item" cdkMenuItem routerLink="/settings">
-      <bio-icon name="settings" [size]="18" />
+      <bio-icon name="settings" [size]="20" />
       Settings
     </a>
     <div class="bio-menu__separator"></div>
     <button class="bio-menu__item" cdkMenuItem (cdkMenuItemTriggered)="notImplemented('Sign out')">
-      <bio-icon name="log-out" [size]="18" />
+      <bio-icon name="log-out" [size]="20" />
       Sign out
     </button>
   </div>

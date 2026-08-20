@@ -240,3 +240,128 @@
   margin-inline-start: auto;
   color: var(--bio-action-primary-bg);
 }
+
+// -- Native form controls -----------------------------------------------------
+// Styling for [bioInput], applied to real <input>/<textarea>/<select>.
+// Same rationale as .bio-button: the native element keeps doing the hard parts.
+.bio-input {
+  width: 100%;
+  min-height: 44px;
+  padding: var(--bio-space-2) var(--bio-space-3);
+  border: 1px solid var(--bio-border-default);
+  border-radius: var(--bio-radius-md);
+  background: var(--bio-surface-default);
+  color: var(--bio-text-primary);
+  font-size: var(--bio-font-size-body);
+  line-height: var(--bio-line-height-body);
+  transition:
+    border-color var(--bio-duration-fast) var(--bio-ease-standard),
+    box-shadow var(--bio-duration-fast) var(--bio-ease-standard);
+
+  &::placeholder {
+    color: var(--bio-text-disabled);
+  }
+
+  &:hover:not(:disabled) {
+    border-color: var(--bio-border-strong);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--bio-focus-ring);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--bio-focus-ring) 26%, transparent);
+  }
+
+  // Keyboard focus still gets the standard ring on top of the glow.
+  &:focus-visible {
+    outline: var(--bio-focus-ring-width) solid var(--bio-focus-ring);
+    outline-offset: 1px;
+  }
+
+  &:disabled {
+    background: var(--bio-action-disabled-bg);
+    color: var(--bio-action-disabled-fg);
+    cursor: not-allowed;
+  }
+
+  // Error state is driven by aria-invalid, so the visual and the accessible
+  // state can never disagree.
+  &[aria-invalid='true'] {
+    border-color: var(--bio-danger-fg);
+
+    &:focus {
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--bio-danger-fg) 24%, transparent);
+    }
+  }
+}
+
+textarea.bio-input {
+  min-height: 96px;
+  resize: vertical;
+}
+
+select.bio-input {
+  cursor: pointer;
+  appearance: none;
+  padding-inline-end: var(--bio-space-8);
+  background-image: linear-gradient(45deg, transparent 50%, currentcolor 50%),
+    linear-gradient(135deg, currentcolor 50%, transparent 50%);
+  background-position:
+    calc(100% - 20px) calc(50% + 2px),
+    calc(100% - 15px) calc(50% + 2px);
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+}
+
+// -- Dialog / bottom sheet ----------------------------------------------------
+// The CDK owns behaviour (focus trap, Esc, restore focus). These classes own
+// presentation, including the md breakpoint where a dialog becomes a sheet.
+.bio-dialog-backdrop {
+  background: var(--bio-surface-overlay);
+  backdrop-filter: blur(2px);
+}
+
+.bio-dialog-panel {
+  display: flex;
+  flex-direction: column;
+  background: var(--bio-surface-raised);
+  box-shadow: var(--bio-elevation-3);
+  overflow: hidden;
+}
+
+// Mobile: a bottom sheet, full width, anchored to the bottom edge, rounded only
+// on top. It also respects the home indicator.
+@media (max-width: 767.98px) {
+  .cdk-overlay-pane.bio-dialog-panel {
+    position: absolute !important;
+    inset-block-end: 0;
+    inset-inline: 0;
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 88dvh !important;
+    border-start-start-radius: var(--bio-radius-xl);
+    border-start-end-radius: var(--bio-radius-xl);
+    padding-block-end: env(safe-area-inset-bottom, 0px);
+    animation: bio-sheet-in var(--bio-duration-slow) var(--bio-ease-decelerate);
+  }
+
+  @keyframes bio-sheet-in {
+    from {
+      translate: 0 100%;
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  .bio-dialog-panel {
+    border-radius: var(--bio-radius-xl);
+    animation: bio-dialog-in var(--bio-duration-base) var(--bio-ease-decelerate);
+  }
+
+  @keyframes bio-dialog-in {
+    from {
+      opacity: 0;
+      scale: 0.98;
+    }
+  }
+}

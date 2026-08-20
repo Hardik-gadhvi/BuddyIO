@@ -89,11 +89,13 @@ const SIZE_PX: Record<AvatarSize, number> = {
 
       /*
        * The hue is dynamic, so this pair cannot live in _tokens.scss. It uses
-       * light-dark() rather than a :host-context selector because
-       * `:not([data-theme='light'])` also matches an unset root and would
-       * therefore apply the dark pair in light mode. light-dark() reads
-       * `color-scheme`, which the token sheet already sets correctly for
-       * explicit AND system themes.
+       * light-dark() rather than a :host-context selector, because a
+       * :not([data-theme='light']) selector also matches an unset root and
+       * would therefore apply the dark pair in light mode. light-dark() reads
+       * color-scheme, which the token sheet already sets correctly for both
+       * explicit and system themes.
+       *
+       * NOTE: no backticks in here - this is inside a template literal.
        */
       color: light-dark(hsl(var(--bio-avatar-hue) 62% 26%), hsl(var(--bio-avatar-hue) 70% 86%));
       background: light-dark(

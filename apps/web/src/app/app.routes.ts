@@ -1,5 +1,9 @@
 import type { Routes } from '@angular/router';
+import { PublicLayout } from '@core/layout/public-layout/public-layout';
 import { Shell } from '@core/layout/shell/shell';
+import { AUTH_CHILD_ROUTES } from '@features/auth/auth.routes';
+import { AUTH_REPOSITORY } from '@features/auth/data-access/auth.repository';
+import { MockAuthRepository } from '@features/auth/data-access/mock-auth.repository';
 import { PlaceholderPage } from '@features/placeholder/placeholder-page';
 
 /**
@@ -18,11 +22,21 @@ import { PlaceholderPage } from '@features/placeholder/placeholder-page';
  * `withComponentInputBinding()`.
  */
 export const routes: Routes = [
+  // ---------------------------------------------------------------- public --
+  // Signed-out surfaces, in the marketing layout. Listed FIRST so '/' resolves
+  // to the landing page; every other URL falls through to the shell below.
+  {
+    path: '',
+    component: PublicLayout,
+    providers: [{ provide: AUTH_REPOSITORY, useExisting: MockAuthRepository }],
+    children: AUTH_CHILD_ROUTES,
+  },
+
+  // --------------------------------------------------------- authenticated --
   {
     path: '',
     component: Shell,
     children: [
-      { path: '', pathMatch: 'full', redirectTo: 'feed' },
 
       {
         path: 'feed',

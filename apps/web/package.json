@@ -1,7 +1,7 @@
 {
   "name": "buddyio-web",
   "version": "0.1.0",
-  "description": "BuddyIO web client — Angular 22, standalone, zoneless, signal-driven.",
+  "description": "BuddyIO web client \u2014 Angular 22, standalone, zoneless, signal-driven.",
   "private": true,
   "engines": {
     "node": "^22.22.3 || ^24.15.0 || >=26.0.0",
@@ -15,7 +15,8 @@
     "test": "ng test",
     "test:watch": "ng test --watch",
     "format": "prettier --write \"src/**/*.{ts,html,scss,json}\"",
-    "format:check": "prettier --check \"src/**/*.{ts,html,scss,json}\""
+    "format:check": "prettier --check \"src/**/*.{ts,html,scss,json}\"",
+    "typecheck": "ngc -p tsconfig.app.json --noEmit"
   },
   "dependencies": {
     "@angular/cdk": "^22.1.3",

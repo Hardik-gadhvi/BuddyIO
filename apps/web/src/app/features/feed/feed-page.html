@@ -79,7 +79,7 @@
             -->
             @if (facade.loadMoreError(); as error) {
               <p class="feed__more-error" role="alert">
-                <bio-icon name="alert-circle" [size]="18" />
+                <bio-icon name="alert-circle" [size]="20" />
                 {{ error.message }}
               </p>
             }
@@ -96,7 +96,7 @@
           } @else {
             <!-- An explicit terminus, never an endless spinner. -->
             <p class="feed__end">
-              <bio-icon name="check" [size]="18" />
+              <bio-icon name="check" [size]="20" />
               You are all caught up
             </p>
           }
